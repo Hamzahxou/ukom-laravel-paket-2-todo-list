@@ -44,7 +44,8 @@ class TaskController extends Controller
         if ($request->input('edit') && $request->input("id")) {
             $edit = $todos->where('user_id', $user->id)->findOrFail($request->input("id"));
         }
-        $todos = $todos->load(['comments.user', 'members.user']);
+        $todos = $todos->load(['comments.user', 'members.user', 'comments.replyComments.user']);
+        // dd($todos->toArray());
         return view('todo.index', compact('tags', 'todos', 'edit'));
     }
 

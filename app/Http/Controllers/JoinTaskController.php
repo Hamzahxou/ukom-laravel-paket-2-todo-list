@@ -34,12 +34,16 @@ class JoinTaskController extends Controller
                 ]);
             }
             return redirect()->route("todo-teams.index")->with("alert", [
-                "icon" => "error",
+                "icon" => "warning",
                 "message" => "Join task already $join->status",
             ]);
         } else if (isset($join) && $join->status == "leave") {
             $join->update([
-                "status" => "pending",
+                "status" => "leave",
+            ]);
+            return redirect()->route("todo-teams.index")->with("alert", [
+                "icon" => "error",
+                "message" => "You have been kicked from this task.",
             ]);
         } else {
             $join = MemberTask::create([
@@ -57,7 +61,7 @@ class JoinTaskController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'status' => 'required|string|in:pending,accepted,rejected'
+            'status' => 'required|string|in:pending,accepted,rejected,leave'
         ]);
         $memberTask = MemberTask::findOrFail($id);
         $memberTask->update([
@@ -65,7 +69,7 @@ class JoinTaskController extends Controller
         ]);
         return redirect()->route("todo-lists.index")->with("alert", [
             "icon" => "success",
-            "message" => "Join task updated",
+            "message" => "Success  $memberTask->status",
         ]);
     }
 }

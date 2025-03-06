@@ -1,5 +1,5 @@
 <script>
-    function updateComment(url, content) {
+    function replyComment(url) {
         // Membuka SweetAlert untuk memperbarui komentar
         const swalWithTailwindButtons = Swal.mixin({
             customClass: {
@@ -10,9 +10,9 @@
         });
 
         swalWithTailwindButtons.fire({
-            title: "Update Comment",
+            title: "Reply Comment",
             html: `
-                <textarea id="swal-input1" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-h-40" placeholder="Comment..." rows="30" style="field-sizing: content;max-height: 200px">${content}</textarea>
+                <textarea id="swal-input1" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm min-h-40" placeholder="Comment..." rows="30" style="field-sizing: content;max-height: 200px"></textarea>
             `,
             focusConfirm: false,
             showCancelButton: true,
@@ -24,13 +24,6 @@
                 // Membuat form sederhana dengan metode POST
                 const form = document.createElement("form");
                 form.method = "POST"; // Tetap menggunakan POST karena HTML hanya mendukung POST secara langsung
-
-                // Menambahkan input _method untuk spoofing metode PUT atau PATCH
-                const methodField = document.createElement("input");
-                methodField.type = "hidden";
-                methodField.name = "_method";
-                methodField.value = "PUT"; // Bisa diganti dengan "PATCH"
-                form.appendChild(methodField);
 
                 // Menambahkan input CSRF Token
                 const csrfToken = document.createElement("input");
