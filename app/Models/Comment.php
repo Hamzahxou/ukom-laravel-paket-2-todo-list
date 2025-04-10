@@ -17,4 +17,14 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function replyComments()
+    {
+        return $this->hasMany(ReplyComment::class);
+    }
 }

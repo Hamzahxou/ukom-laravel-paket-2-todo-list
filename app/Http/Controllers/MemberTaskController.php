@@ -18,7 +18,7 @@ class MemberTaskController extends Controller
         $user = Auth::user();
         $tags = TagItem::where('user_id', $user->id)->get()->pluck('name');
         // $todos = Task::where('user_id', $user->id)->with(['tags', 'comments.user', 'members.user'])->get();
-        $todos = MemberTask::where('status', "accepted")->where('member_id', $user->id)->with(['task.tags', 'task.comments.user', 'task.members.user', 'task.user'])->get()->pluck('task');
+        $todos = MemberTask::where('status', "accepted")->where('member_id', $user->id)->with(['task.tags', 'task.comments.user', 'task.members.user', 'task.user'])->get();
         // dd($todos->toArray());
         return view('team.index', compact('tags', 'todos'));
     }
