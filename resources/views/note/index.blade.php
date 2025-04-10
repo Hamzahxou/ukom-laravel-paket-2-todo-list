@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ "Notes" }}
+            {{ 'Notes' }}
         </h2>
     </x-slot>
 
@@ -59,10 +59,10 @@
                         <i
                             class="text-xs text-slate-400 block text-end mb-1">{{ $note->created_at->diffForHumans() }}</i>
 
-                        <div class="flex gap-1">
+                        <div class="flex gap-1 overflow-auto w-full">
                             @foreach ($note->tags as $tag)
                                 <a href=""
-                                    class="text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->tagItem->name }}</a>
+                                    class="block text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->tagItem->name }}</a>
                             @endforeach
                         </div>
                     </div>

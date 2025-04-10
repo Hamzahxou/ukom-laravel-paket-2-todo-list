@@ -22,8 +22,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->timestamps();
         });
-    }
-
+    } 
     /**
      * Reverse the migrations.
      */
