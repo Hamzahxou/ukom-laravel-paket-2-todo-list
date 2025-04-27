@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Task extends Model
 {
+    use HasFactory;
     protected $table = 'tasks';
     protected $fillable = ['title', 'description', 'priority', 'completed', 'token',  'progress', 'user_id'];
 
@@ -24,15 +27,10 @@ class Task extends Model
 
     protected function randomToken($n)
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token = 'TASK-';
-        for ($i = 0; $i < $n; $i++) {
-            $token .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        $tokenCek = self::where('token', $token)->first();
-        if ($tokenCek) {
-            return $this->randomToken($n);
-        }
+        $token = '';
+        do {
+            $token = "TASK_" . Str::random($n);
+        } while (self::where('token', $token)->exists());
         return $token;
     }
 
@@ -43,7 +41,8 @@ class Task extends Model
 
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        // return $this->hasMany(Tag::class);
+        return $this->belongsToMany(TagItem::class, 'tags', 'task_id', 'tag_item_id');
     }
 
     public function comments()

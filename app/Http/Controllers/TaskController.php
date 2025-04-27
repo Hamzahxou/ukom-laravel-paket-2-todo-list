@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
 use App\Models\TagItem;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -80,20 +79,18 @@ class TaskController extends Controller
         $tags = $request->tags;
         $tags = json_decode($tags);
         $tags = array_column($tags, 'value');
+
+        $tag_items = [];
         foreach ($tags as $tag) {
-            $tagItem = TagItem::where('name', $tag)->first();
-            $tagItems = $tagItem;
-            if (!$tagItem) {
-                $tagItems = TagItem::create([
-                    'name' => $tag,
-                    'user_id' => $user->id,
-                ]);
-            }
-            Tag::create([
-                'tag_item_id' => $tagItems->id,
-                'task_id' => $task->id,
+            $tagItem = TagItem::where('name', $tag)->firstOrCreate([
+                'name' => $tag,
+                'user_id' => $user->id,
             ]);
+
+            $tag_items[] = $tagItem->id;
         }
+
+        $task->tags()->sync($tag_items);
 
         return redirect()->route('todo-lists.index')->with('alert', [
             "icon" => "success",
@@ -140,41 +137,20 @@ class TaskController extends Controller
             "progress" => $request->progress,
         ]);
 
-        $tagsReq = json_decode($request->tags);
-        $tagsNew = array_column($tagsReq, 'value');
+        $tags = $request->tags;
+        $tags = json_decode($tags);
+        $tags = array_column($tags, 'value');
+        $tag_items = [];
+        foreach ($tags as $tag) {
+            $tagItem = TagItem::where('name', $tag)->firstOrCreate([
+                'name' => $tag,
+                'user_id' => $user->id,
+            ]);
 
-        $tags = Tag::where('task_id', $task->id)->with('tagItem')->get();
-        $tagsOld = $tags->pluck('tagItem.name')->toArray();
-
-        // 1. Hapus tag lama yang tidak ada di input baru
-        $tagsUntukDihapus = array_diff($tagsOld, $tagsNew);
-        foreach ($tagsUntukDihapus as $tagHapus) {
-            $tagTersedia = TagItem::where('name', $tagHapus)->first();
-            if ($tagTersedia) {
-                Tag::where('tag_item_id', $tagTersedia->id)
-                    ->where('task_id', $task->id)
-                    ->delete();
-            }
+            $tag_items[] = $tagItem->id;
         }
 
-        // 2. Tambahkan tag baru yang belum ada di database
-        foreach ($tagsNew as $tag) {
-            $tagItem = TagItem::where('name', $tag)->first();
-            if (!$tagItem) {
-                $tagItem = TagItem::create([
-                    'name' => $tag,
-                    'user_id' => $user->id,
-                ]);
-            }
-
-            $tagItems = Tag::where("task_id", $task->id)->where("tag_item_id", $tagItem->id)->first();
-            if (!$tagItems) {
-                Tag::create([
-                    'tag_item_id' => $tagItem->id,
-                    'task_id' => $task->id,
-                ]);
-            }
-        }
+        $task->tags()->sync($tag_items);
 
         return redirect()->route('todo-lists.index')->with('alert', [
             "icon" => "success",

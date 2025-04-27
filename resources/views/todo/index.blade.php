@@ -108,7 +108,7 @@
                                 document.getElementById("minprogress").textContent = value;
                             }
                         </script>
-                        <x-tagify :tags="$tags" name="tags" :value="$edit->tags->pluck('tagItem.name')" />
+                        <x-tagify :tags="$tags" name="tags" :value="$edit->tags->pluck('name')" />
                     </form>
             </div>
         @else
@@ -323,7 +323,7 @@
                                 <input type="checkbox"
                                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 cursor-pointer"
                                     @if (!$todo->completed) onchange="alertConfirm(this.form, 'is this task completed');this.checked=!this.checked"
-                                            @else 
+                                            @else
                                                 onchange="alertConfirm(this.form, '');
                                                 this.checked=!this.checked" @endif
                                     @checked($todo->completed)>
@@ -408,7 +408,7 @@
                                                     <th>
                                                         @foreach ($todo->tags as $tag)
                                                             <a href=""
-                                                                class="text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->tagItem->name }}</a>
+                                                                class="text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->name }}</a>
                                                         @endforeach
 
                                                     </th>
@@ -488,7 +488,7 @@
                                                                     </button>
                                                                 </x-slot>
 
-                                                                <x-slot name="content">
+                                                                <x-slot name="content" class="">
                                                                     <div class="flex  flex-col p-2 gap-2">
                                                                         <div clasa="">
                                                                             <span
@@ -502,10 +502,8 @@
                                                                                     onchange="alertConfirm(this.form, 'change status')"
                                                                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md text-slate-700 shadow-md text-xs"
                                                                                     style="field-sizing: content">
-                                                                                    <option value="" disabled> --
-                                                                                        Select
-                                                                                        Status
-                                                                                        -- </option>
+                                                                                    <option value="" disabled
+                                                                                        selected>selected</option>
                                                                                     @if ($member->status != 'leave')
                                                                                         <option value="accepted"
                                                                                             @selected($member->status == 'accepted')>

@@ -15,6 +15,7 @@ class Note extends Model
 
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        // return $this->hasMany(Note::class);
+        return $this->belongsToMany(TagItem::class, 'tags', 'note_id', 'tag_item_id');
     }
 }
