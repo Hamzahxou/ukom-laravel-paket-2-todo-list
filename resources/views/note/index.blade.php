@@ -62,7 +62,7 @@
                         <div class="flex gap-1 overflow-auto w-full">
                             @foreach ($note->tags as $tag)
                                 <a href=""
-                                    class="block text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->tagItem->name }}</a>
+                                    class="block text-xs py-1 px-2 rounded-sm bg-slate-700 text-white">{{ $tag->name }}</a>
                             @endforeach
                         </div>
                     </div>

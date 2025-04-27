@@ -32,13 +32,13 @@ class TagController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:tag_items,name'],
+            'name' => ['required', 'string', 'max:255', 'unique:tag_items,name']
         ]);
         $user = Auth::user();
         TagItem::create([
             'name' => $request->name,
             'user_id' => $user->id,
-         ]);
+        ]);
         return redirect()->route('tags.index');
     }
 
@@ -63,10 +63,11 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'name' => "required|string|max:255|unique:tag_items,name,$id"
-        ]);
         $user = Auth::user();
+        $request->validate([
+            'name' => "required|string|max:255|unique:tag_items,name,{$id},id,user_id,{$user->id}",
+        ]);
+
         $tag = TagItem::where('user_id', $user->id)->findOrFail($id);
         $tag->update([
             'name' => $request->name
