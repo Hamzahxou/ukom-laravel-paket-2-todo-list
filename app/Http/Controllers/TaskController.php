@@ -38,12 +38,12 @@ class TaskController extends Controller
         } else {
             $todos = $todos->orderBy('priority', 'desc');
         }
-        $todos = $todos->get();
+        $todos = $todos->with(['comments.user', 'members.user', 'comments.replyComments.user']);
+        $todos = $todos->paginate(5);
         $edit = null;
         if ($request->input('edit') && $request->input("id")) {
             $edit = $todos->where('user_id', $user->id)->findOrFail($request->input("id"));
         }
-        $todos = $todos->load(['comments.user', 'members.user', 'comments.replyComments.user']);
         // dd($todos->toArray());
         return view('todo.index', compact('tags', 'todos', 'edit'));
     }

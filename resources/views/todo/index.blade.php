@@ -875,6 +875,8 @@
             </tbody>
         </table>
     </div>
+
+    {{ $todos->withQueryString()->links() }}
     </div>
     </div>
 
